@@ -9,7 +9,7 @@ from transformers import AutoTokenizer, AutoModelForTokenClassification
 from .knowledge_graph import KnowledgeGraph
 
 # Declare json as api to use gemini
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'C:/Users/azaan/OneDrive/Documents/GitHub/dtxplus-chat-app/patient_chat_app/gemini_api_key.json'
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'C:/Users/azaan/OneDrive/Documents/GitHub/DtxPlus-Chatbot/patient_chat_app/gemini_api_key.json'
 
 # Initialize NER model for medical entity extraction
 tokenizer = AutoTokenizer.from_pretrained("emilyalsentzer/Bio_ClinicalBERT")

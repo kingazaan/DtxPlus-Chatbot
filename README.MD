@@ -8,8 +8,8 @@ This project implements a Django-based Patient Chat Application where a patient 
 **Health-Related Conversations**: The bot assists the patient by answering queries related to medical conditions, medications, diet, and appointments.
 **Appointment Requests**: Patients can reschedule appointments, and the bot will update the request for the doctor. Example: ![alt text](images/image-3.png)
 **Entity Extraction**: The bot extracts key entities (e.g., medications, appointment preferences, symptoms) from the conversation and stores them in a Neo4j knowledge graph for dynamic use in subsequent conversations. Example in image, where chat pulls information about patient from knowledge graph: ![alt text](images/image-2.png)
-**Memory Optimization**: The bot manages long conversations by optimizing memory to ensure important details persist without increasing memory usage unnecessarily.
-**LLM Agnostic Design**: By using Langchain, the design allows swapping language models easily (e.g., using Gemini for the demo but can be replaced with other LLMs by changing environment variables).
+**Memory Optimization**: The bot manages long conversations by optimizing memory stored in the knowledge graph and in the PostgreSQL database. Currently I did not utilize memory from LangChain, rather memory was implemented across the 2 databases so these handle memory thoroughly with advanced querying, and memory is stored across sessions. Memory is stored asynchronously in real-time for quicker processing.
+**LLM Agnostic Design**: This project was implemented using Google’s Gemini model via the Langchain framework. However, the system is designed to be agnostic to the LLM in use. This means that other models, such as GPT-3, LLaMA, or any healthcare-focused models, can be easily integrated. The chatbot’s architecture is flexible, allowing for seamless switching between different models to suit various use cases.
 
 ## Details about Machine Learning Deployments in this Repository
 - **Classifier for Query Filtering**: The chatbot utilizes a binary classifier trained on 2 QA datasets, **MedQuAD** for health-related queries and **Natural Questions** for non-health-related queries; in addition, a topic model from HuggingFace was also used (**etanios/short-pubmed-bertopic**) in order to filter out non-health related prompts with minimal leakage, as well as **alt-profanity-check** to limit profanity and unwanted subjects.
@@ -74,7 +74,7 @@ DATABASES = {
 Install and set up Neo4j:
 Download from neo4j.com
 Set up a local instance with default configurations.
-Once Neo4j is running, update your knowledge_graph.py with your Neo4j connection credentials:
+Once Neo4j is running, update your knowledge_graph.py with your Neo4j connection credentials in the knowledge_graph.py file:
 ```python
 uri = "bolt://localhost:7687"
 user = "neo4j"
@@ -102,6 +102,14 @@ python manage.py runserver
 ```
 Access the app by navigating to http://127.0.0.1:8000/ in your browser.
 
+9. Environmental Variables
+The following environmental variables need to be set for the project to work correctly:
+
+NEO4J_URI: The URI of your Neo4j database (e.g., bolt://localhost:7687)
+NEO4J_USER: Your Neo4j username
+NEO4J_PASSWORD: Your Neo4j password
+GOOGLE_API_KEY: API key for using Google Gemini or other models via Langchain.
+
 ## Usage
 Once the application is running:
 
@@ -116,14 +124,13 @@ The application is designed to be LLM agnostic to allow easy swapping between mo
 
 ### Future Improvements
 Implement multi-agent systems to further separate task-based models.
-Conversation Summaries could be generated to provide medical insights after long interactions. Seems pretty easy to implement, will do this in near future.
-Utilizing Knowledge Graphs for additional querying from chatbot could also be implemented, Gemini is not ideal for these situations so Llama 3.1 is probably the next ideal candidate for this use case. 
+In future iterations, I will plan to add automated conversation summarization, allowing the chatbot to summarize patient interactions for easier documentation and review. This will likely be implemented using transformers for summarization tasks.
 Some redundancy existed between databases PostgreSQL and Neo4j because entities extracted sometimes help information about dosage and medications. I saved all the entity data into the PostgreSQL table as well as you can see below in an example chat:
+
 | id  | message                                                                                                                                                          | timestamp                      | patient_id | sender  | entities                                                                                                            |
 |-----|------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------|------------|---------|---------------------------------------------------------------------------------------------------------------------|
 | 152 | I am taking lisinopril twice a day and I have an appointment to November 1, 2025 at 3:00 PM. I am also on a keto diet.                                                      | 2024-09-30 13:12:46.025945-05  | 1          | patient | {"diet": "keto", "frequency": "twice a day", "medication": "lisinopril", "appointment_time": "2024-09-30 15:00:00"} |
 | 153 | Appointment rescheduled from Saturday, November 01, 2025 to Saturday, November 01, 2025. | 2024-09-30 13:12:46.032777-05  | 1          | bot     | N/A                                                                                                                 |
-
 
 ## Conclusion
 This project fulfills the main requirements of building a chatbot for health-related inquiries, entity extraction, and appointment management. With the integration of Neo4j for the knowledge graph and Langchain for model flexibility, it also meets bonus criteria for knowledge graph usage and LLM-agnostic design.

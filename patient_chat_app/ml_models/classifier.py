@@ -2,8 +2,8 @@ from transformers import BertTokenizer, BertForSequenceClassification
 import torch
 
 # Load tokenizer and model from the results folder
-tokenizer = BertTokenizer.from_pretrained('C:\\Users\\azaan\\OneDrive\\Documents\\GitHub\\dtxplus-chat-app\\patient_chat_app\\ml_models\\classifier_model')
-model = BertForSequenceClassification.from_pretrained('C:\\Users\\azaan\\OneDrive\\Documents\\GitHub\\dtxplus-chat-app\\patient_chat_app\\ml_models\\classifier_model')
+tokenizer = BertTokenizer.from_pretrained('C:\\Users\\azaan\\OneDrive\\Documents\\GitHub\\DtxPlus-Chatbot\\patient_chat_app\\ml_models\\classifier_model')
+model = BertForSequenceClassification.from_pretrained('C:\\Users\\azaan\\OneDrive\\Documents\\GitHub\\DtxPlus-Chatbot\\patient_chat_app\\ml_models\\classifier_model')
 
 # Define classification function
 def classify_text(input_text):
