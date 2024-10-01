@@ -1,0 +1,158 @@
+/* General styling */
+body {
+    font-family: Inter, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+.splash-screen {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #2d9cdb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    z-index: 9999;
+}
+.chat-header {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.chat-container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.chat-box {
+    height: 400px;
+    overflow-y: scroll;
+    padding: 20px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    background-color: #fafafa;
+}
+.chat-message {
+    margin-bottom: 10px;
+}
+.chat-message p {
+    margin: 0;
+    font-family: Inter, sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+.patient-message {
+    text-align: right;
+    background-color: #d1f1e0;
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+    max-width: 75%;
+}
+.bot-message {
+    text-align: left;
+    background-color: #e4e4e4;
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+    max-width: 75%;
+}
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: auto;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+form {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+input[type="text"] {
+    width: 85%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #45a049;
+}
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: white;
+    color: black; /* Ensure all text is black */
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidenav p, .sidenav ul, .sidenav li, .sidenav a {
+    color: black !important; /* Ensure all text in the sidebar is black */
+}
+
+.sidenav a:hover {
+    color: black !important;
+}
+
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+}
+
+/* Style for the open button */
+.openbtn {
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 10px;
+    position: absolute;  /* Make it absolute */
+    top: 10px;           /* Position it at the top */
+    left: 10px;          /* Position it on the left */
+}
+
+.openbtn:hover {
+    background-color: #45a049;
+}

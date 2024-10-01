@@ -1,0 +1,11 @@
+venv/
+*.pyc
+__pycache__/
+.DS_Store
+.env
+db.sqlite3
+Take-Home-AI Engineer.pdf
+MedQuAD/
+GNQ_dev/
+patient_chat_app/ml_models/models--SciPhi--Triplex
+patient_chat_app/gemini_api_key.json

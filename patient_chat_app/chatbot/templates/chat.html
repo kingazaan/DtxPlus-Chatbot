@@ -1,0 +1,145 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTxPlus AI Chat Assistant</title> <!-- Updated Title -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Optional CSS file for styling -->
+</head>
+<body>
+
+<!-- Splash screen -->
+<div class="splash-screen" id="splash-screen">
+    <h1>DTxPlus AI Assistant</h1>
+</div>
+
+<!-- Main header -->
+<div class="chat-header">
+    <h2>DTxPlus AI Chat Assistant</h2>
+    <p><strong>Welcome to Your Virtual Health Assistant!</strong></p>
+    <p>I’m here to assist you with your health-related questions, medication requests, appointment changes, and more.</p>
+</div>
+
+<!-- Chat container -->
+<div class="chat-container">
+    <div class="chat-box" id="chat-window">
+        <!-- Chat history rendering -->
+        {% for message in chat_history %}
+        <div class="chat-message">
+            {% if message.sender == 'patient' %}
+            <div class="patient-message">
+                <p>{{ message.message }}</p>
+                <small>{{ message.timestamp }}</small>
+            </div>
+            {% else %}
+            <div class="bot-message">
+                <p>{{ message.message|safe }}</p>
+                <small>{{ message.timestamp }}</small>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Chat input form -->
+    <form id="chat-form" method="POST" action="">
+        {% csrf_token %}
+        <input type="text" id="message" name="message" placeholder="Type your message here..." required>
+        <button type="submit">Send</button>
+    </form>
+</div>
+
+<!-- Sidebar Trigger -->
+<button class="openbtn" onclick="openNav()">Info</button>
+
+<<!-- Sidebar -->
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <p style="padding: 8px 16px; font-size: 20px;">
+      <strong>I’m here to assist you with your health-related questions, medication requests, appointment changes, and more. Here's how you can interact with me:</strong>
+    </p>
+    <ul style="padding-left: 30px;">
+        <li><strong>Medical Inquiries:</strong> Ask me any health-related question! For example, mention "symptoms", "treatment", "condition", or "diagnosis".</li>
+        <li><strong>Appointment Changes:</strong> Say "appointment", "reschedule", "change date", or "schedule" to change an appointment. Please provide a clear date and time in the format: <code>MM/DD/YYYY</code> or <code>Month Day, Year at 0:00 AM/PM</code> (e.g., "January 15, 2024 at 3:00 PM").</li>
+        <li><strong>Medication Requests:</strong> Mention "medication change" or "prescription" to request changes or refills for your medication.</li>
+        <li><strong>Non-Health-Related Inquiries:</strong> I’ll guide you back to health-related questions if your query is unrelated.</li>
+    </ul>
+    <p style="padding: 8px 16px;">If at any point you’re unsure, just ask! I’m here to make your experience as smooth as possible.</p>
+  </div>
+
+  <!-- Add jQuery for AJAX functionality -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Splash screen effect
+        setTimeout(function () {
+            $('#splash-screen').fadeOut(1000);
+        }, 2000);
+
+        // Handling form submission
+        $('#chat-form').on('submit', function (event) {
+            event.preventDefault();  // Prevent form from submitting the normal way
+
+            // Show a loading spinner before the bot response
+            $('#chat-window').append(`
+                <div class="chat-message">
+                    <div class="bot-message">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+            `);
+
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'chat' %}",  // Make sure the URL matches the view URL
+                data: {
+                    'message': $('#message').val(),
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'  // Include the CSRF token
+                },
+                success: function (response) {
+                    // Remove the loading spinner
+                    $('.loading-spinner').parent().remove();
+
+                    // Append user message and bot response to chat window
+                    $('#chat-window').append(`
+                        <div class="chat-message">
+                            <div class="patient-message">
+                                <p>${response.user_message}</p>
+                                <small>${response.timestamp}</small>
+                            </div>
+                            <div class="chat-message">
+                                <div class="bot-message">
+                                    <p>${response.bot_response}</p>
+                                    <small>${response.timestamp}</small>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+
+                    // Clear the input box after submission
+                    $('#message').val('');
+
+                    // Scroll chat box to the bottom to show the latest messages
+                    $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
+                },
+                error: function (xhr, errmsg, err) {
+                    console.log('AJAX error: ' + errmsg);
+                }
+            });
+        });
+    });
+
+    // Sidebar functions
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "300px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+    }
+</script>
+
+</body>
+</html>
